@@ -1,0 +1,15 @@
+# Node.js related files
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.pnpm-debug.log
+.npm/
+.yarn/
+.pnp.*
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+out/
