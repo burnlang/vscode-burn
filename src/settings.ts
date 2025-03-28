@@ -1,4 +1,3 @@
-// src/settings.ts - Settings management
 import { connection, documentSettings, globalSettings, hasConfigurationCapability } from './server';
 
 export interface BurnSettings {
@@ -8,7 +7,8 @@ export interface BurnSettings {
 
 export const defaultSettings: BurnSettings = {
   maxNumberOfProblems: 100,
-  compilerPath: 'burn',
+  //dev only
+  compilerPath: './burn.exe',
 };
 
 export function getDocumentSettings(resource: string): Thenable<BurnSettings> {
