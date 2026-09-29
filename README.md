@@ -4,7 +4,7 @@
 
 # Burn Language Support for VS Code
 
-Language support for [Burn](https://github.com/burnlang/burn) 2.
+Language support for [Burn](https://github.com/burnlang/burn).
 
 ## Features
 
@@ -20,11 +20,11 @@ Language support for [Burn](https://github.com/burnlang/burn) 2.
 ## Requirements
 
 The extension is a thin client for the language server built into the `burn` binary (`burn lsp`), so
-diagnostics always match the compiler. Install Burn 2 and make sure `burn` is on your `PATH`, or set
+diagnostics always match the compiler. Install Burn and make sure `burn` is on your `PATH`, or set
 `burn.path` in the settings.
 
 - Visual Studio Code 1.82.0 or newer
-- Burn 2 (`burn version` prints `Burn 2.x`)
+- Burn with the built-in language server (`burn lsp`)
 
 ## Settings
 
