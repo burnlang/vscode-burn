@@ -43,7 +43,7 @@ curl -fsSL https://raw.githubusercontent.com/burnlang/burn/master/install.sh | s
 npm install
 npm run compile
 npx vsce package
-code --install-extension burn-language-server-2.0.0.vsix
+code --install-extension burn-language-server-26.1.0.vsix
 ```
 
 Press `F5` in VS Code to start an Extension Development Host.
