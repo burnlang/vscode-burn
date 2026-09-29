@@ -1,14 +1,21 @@
 {
   "name": "burn-language-server",
   "displayName": "Burn Language Support",
-  "description": "Language support for the Burn programming language",
-  "version": "0.1.0",
+  "description": "Syntax highlighting, diagnostics, completion, hover, go to definition and formatting for the Burn programming language",
+  "version": "2.0.0",
   "publisher": "burn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/burnlang/vscode-burn"
+  },
   "engines": {
-    "vscode": "^1.74.0"
+    "vscode": "^1.82.0"
   },
   "categories": [
-    "Programming Languages"
+    "Programming Languages",
+    "Formatters",
+    "Snippets"
   ],
   "activationEvents": [
     "onLanguage:burn"
@@ -35,15 +42,48 @@
         "path": "./syntaxes/burn.tmLanguage.json"
       }
     ],
+    "snippets": [
+      {
+        "language": "burn",
+        "path": "./snippets/burn.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "burn.run",
+        "title": "Burn: Run Current File"
+      },
+      {
+        "command": "burn.runNative",
+        "title": "Burn: Compile and Run Current File Natively"
+      },
+      {
+        "command": "burn.build",
+        "title": "Burn: Build Executable"
+      },
+      {
+        "command": "burn.restartServer",
+        "title": "Burn: Restart Language Server"
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "Burn",
       "properties": {
-        "burnLanguageServer.maxNumberOfProblems": {
-          "scope": "resource",
-          "type": "number",
-          "default": 100,
-          "description": "Controls the maximum number of problems produced by the server."
+        "burn.path": {
+          "type": "string",
+          "default": "burn",
+          "description": "Path to the burn executable used for the language server and commands."
+        },
+        "burn.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the Burn language server."
         }
       }
     }
@@ -52,29 +92,21 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint && npm run pretty",
-    "lint": "eslint src --fix",
-    "test": "node ./out/test/runTest.js",
-    "pretty": "prettier --write ."
-  },
-  "devDependencies": {
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^16.18.34",
-    "@types/vscode": "^1.74.0",
-    "@typescript-eslint/eslint-plugin": "^6.1.0",
-    "@typescript-eslint/parser": "^6.1.0",
-    "@vscode/test-electron": "^2.3.0",
-    "eslint": "^8.45.0",
-    "mocha": "^10.2.0",
-    "typescript": "^5.1.6"
+    "lint": "eslint src",
+    "pretty": "prettier --write .",
+    "package": "vsce package"
   },
   "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.82.0",
+    "@vscode/vsce": "^3.2.1",
+    "eslint": "^9.20.0",
     "eslint-config-prettier": "^10.1.1",
     "prettier": "^3.5.3",
-    "typescript-eslint": "^8.28.0",
-    "vscode-languageclient": "^8.1.0",
-    "vscode-languageserver": "^8.1.0",
-    "vscode-languageserver-textdocument": "^1.0.8",
-    "vscode-uri": "^3.1.0"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.28.0"
   }
 }
