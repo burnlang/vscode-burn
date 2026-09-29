@@ -1,0 +1,9 @@
+src/**
+node_modules/.cache/**
+**/*.map
+*.vsix
+tsconfig.json
+eslint.config.mjs
+.prettierrc
+.prettierignore
+.vscode/**

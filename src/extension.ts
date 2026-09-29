@@ -1,80 +1,71 @@
-import * as path from 'path';
 import * as vscode from 'vscode';
-import {
-  LanguageClient,
-  LanguageClientOptions,
-  ServerOptions,
-  TransportKind,
-} from 'vscode-languageclient/node';
+import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient/node';
 
-let client: LanguageClient;
+let client: LanguageClient | undefined;
 
-export function activate(context: vscode.ExtensionContext) {
-  console.log('Burn language server is now active!');
+function burnPath(): string {
+  return vscode.workspace.getConfiguration('burn').get<string>('path') ?? 'burn';
+}
 
-  const serverModule = context.asAbsolutePath(path.join('out', 'server.js'));
-
-  const debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
-
+function startClient(context: vscode.ExtensionContext): void {
+  const command = burnPath();
   const serverOptions: ServerOptions = {
-    run: { module: serverModule, transport: TransportKind.ipc },
-    debug: {
-      module: serverModule,
-      transport: TransportKind.ipc,
-      options: debugOptions,
-    },
+    run: { command, args: ['lsp'] },
+    debug: { command, args: ['lsp'] },
   };
-
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [{ scheme: 'file', language: 'burn' }],
-    synchronize: {
-      fileEvents: vscode.workspace.createFileSystemWatcher('**/*.bn'),
-    },
+    documentSelector: [
+      { scheme: 'file', language: 'burn' },
+      { scheme: 'untitled', language: 'burn' },
+    ],
+    synchronize: { fileEvents: vscode.workspace.createFileSystemWatcher('**/*.bn') },
   };
-
-  client = new LanguageClient(
-    'burnLanguageServer',
-    'Burn Language Server',
-    serverOptions,
-    clientOptions
-  );
-
-  const compilerStatusCommand = vscode.commands.registerCommand('burn.checkCompilerStatus', () => {
-    const config = vscode.workspace.getConfiguration('burnLanguageServer');
-    const compilerPath = config.get<string>('compilerPath') ?? './burn.exe';
-
-    void client.sendNotification('custom/checkCompilerStatus', { compilerPath });
+  client = new LanguageClient('burn', 'Burn Language Server', serverOptions, clientOptions);
+  client.start().catch((err: unknown) => {
+    const reason = err instanceof Error ? err.message : String(err);
+    void vscode.window.showErrorMessage(
+      `Could not start the Burn language server (${command} lsp): ${reason}. Set "burn.path" to your burn executable.`
+    );
   });
+  context.subscriptions.push({ dispose: () => void client?.stop() });
+}
 
-  const restartServerCommand = vscode.commands.registerCommand('burn.restartServer', async () => {
-    await client.stop();
-    vscode.window.showInformationMessage('Burn Language Server restarted');
+function runInTerminal(args: string[]): void {
+  const editor = vscode.window.activeTextEditor;
+  if (editor?.document.languageId !== 'burn') {
+    void vscode.window.showWarningMessage('Open a .bn file first.');
+    return;
+  }
+  void editor.document.save().then(() => {
+    const terminal =
+      vscode.window.terminals.find(t => t.name === 'Burn') ?? vscode.window.createTerminal('Burn');
+    terminal.show(true);
+    terminal.sendText(
+      `${JSON.stringify(burnPath())} ${args.join(' ')} ${JSON.stringify(editor.document.fileName)}`
+    );
   });
+}
 
-  const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-  statusBarItem.text = '$(sync) Burn';
-  statusBarItem.tooltip = 'Burn Language Server Status';
-  statusBarItem.command = 'burn.checkCompilerStatus';
-  statusBarItem.show();
-
-  void client.start();
-
-  context.subscriptions.push(client, compilerStatusCommand, restartServerCommand, statusBarItem);
-
-  client.onNotification(
-    'custom/compilerStatus',
-    (params: { available: boolean; version: string }) => {
-      if (params.available) {
-        statusBarItem.text = `$(check) Burn ${params.version}`;
-        statusBarItem.tooltip = `Burn compiler ${params.version} is available`;
-      } else {
-        statusBarItem.text = `$(warning) Burn`;
-        statusBarItem.tooltip = `Burn compiler not found. Check settings.`;
-      }
-    }
+export function activate(context: vscode.ExtensionContext): void {
+  startClient(context);
+  context.subscriptions.push(
+    vscode.commands.registerCommand('burn.run', () => {
+      runInTerminal(['run']);
+    }),
+    vscode.commands.registerCommand('burn.runNative', () => {
+      runInTerminal(['run', '--native']);
+    }),
+    vscode.commands.registerCommand('burn.build', () => {
+      runInTerminal(['build']);
+    }),
+    vscode.commands.registerCommand('burn.restartServer', async () => {
+      await client?.stop();
+      startClient(context);
+      void vscode.window.showInformationMessage('Burn language server restarted');
+    })
   );
 }
 
-export function deactivate(): Thenable<void> {
-  return client.stop();
+export function deactivate(): Thenable<void> | undefined {
+  return client?.stop();
 }

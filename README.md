@@ -4,60 +4,46 @@
 
 # Burn Language Support for VS Code
 
-This extension provides language support for the Burn programming language.
+Language support for [Burn](https://github.com/burnlang/burn).
 
 ## Features
 
-- Syntax highlighting for Burn language files (.bn)
-- Auto-completion for keywords, types, and built-in functions
-- Hover information for language elements
-- Basic error detection for unbalanced delimiters
-- Snippets for common code patterns
+- Syntax highlighting for `.bn` files, including `def type`, `def class`, `def interface`, `def enum` and string templates
+- Live diagnostics from the real Burn compiler with exact line and column
+- Hover with inferred types and signatures
+- Completion for locals, globals, types, built-ins and members after `.`
+- Go to definition, including into imported files
+- Document outline and formatting
+- Snippets for common constructs
+- Commands: **Burn: Run Current File**, **Burn: Compile and Run Current File Natively**, **Burn: Build Executable**, **Burn: Restart Language Server**
 
 ## Requirements
 
-- Visual Studio Code 1.74.0 or newer
+The extension is a thin client for the language server built into the `burn` binary (`burn lsp`), so
+diagnostics always match the compiler. Install Burn and make sure `burn` is on your `PATH`, or set
+`burn.path` in the settings.
 
-## Installation
+- Visual Studio Code 1.82.0 or newer
+- Burn with the built-in language server (`burn lsp`)
 
-### From VS Code Marketplace
+## Settings
 
-1. Open VS Code
-2. Go to Extensions (Ctrl+Shift+X)
-3. Search for "Burn Language Support"
-4. Click Install
+| Setting | Default | Description |
+| --- | --- | --- |
+| `burn.path` | `burn` | path to the burn executable |
+| `burn.trace.server` | `off` | trace the communication with the language server |
 
-### Manual Installation
+## Development
 
-1. Download the VSIX file from the releases page
-2. In VS Code, go to Extensions (Ctrl+Shift+X)
-3. Click on "..." at the top of the Extensions pane
-4. Select "Install from VSIX..."
-5. Choose the downloaded file
+```sh
+npm install
+npm run compile
+npx vsce package
+code --install-extension burn-language-server-2.0.0.vsix
+```
 
-## Usage
-
-The extension will automatically activate when you open any .bn file.
-
-### Keyboard Shortcuts
-
-- Code completion: Ctrl+Space
-- Format document: Shift+Alt+F
-
-## Extension Settings
-
-This extension contributes the following settings:
-
-* `burnLanguageServer.maxNumberOfProblems`: Controls the maximum number of problems reported by the server.
-
-## Build from Source
-
-1. Clone the repository
-2. Navigate to the vscode directory
-3. Run `npm install`
-4. Run `npm run compile`
-5. Press F5 to launch with debugging
+Press `F5` in VS Code to start an Extension Development Host.
 
 ## License
 
-[MIT LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE).
