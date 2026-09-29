@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/S42yt/assets/blob/master/assets/burnlang/burn-logo.png" alt="Burn Logo">
+    <img src="images/icon.png" alt="Burn logo" width="128">
 </p>
 
 # Burn Language Support for VS Code
@@ -20,8 +20,12 @@ Language support for [Burn](https://github.com/burnlang/burn).
 ## Requirements
 
 The extension is a thin client for the language server built into the `burn` binary (`burn lsp`), so
-diagnostics always match the compiler. Install Burn and make sure `burn` is on your `PATH`, or set
-`burn.path` in the settings.
+diagnostics always match the compiler. Install the Burn toolchain and make sure `burn` is on your `PATH`, or set
+`burn.path` in the settings:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/burnlang/burn/master/install.sh | sh
+```
 
 - Visual Studio Code 1.82.0 or newer
 - Burn with the built-in language server (`burn lsp`)
