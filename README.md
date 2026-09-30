@@ -50,4 +50,4 @@ Press `F5` in VS Code to start an Extension Development Host.
 
 ## License
 
-MIT - see [LICENSE](LICENSE).
+GNU General Public License v3.0 - see [LICENSE](LICENSE).
