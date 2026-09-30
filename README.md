@@ -8,7 +8,7 @@ Language support for [Burn](https://github.com/burnlang/burn).
 
 ## Features
 
-- Syntax highlighting for `.bn` files, including `def type`, `def class`, `def interface`, `def enum` and string templates
+- Syntax highlighting for `.bn` files, including `def type`, `def struct` (also `abstract` and `static`), `def interface`, `def enum`, `new`, `destroy` and string templates
 - Live diagnostics from the real Burn compiler with exact line and column
 - Hover with inferred types and signatures
 - Completion for locals, globals, types, built-ins and members after `.`
