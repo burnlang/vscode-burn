@@ -1,17 +1,42 @@
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient/node';
 
 let client: LanguageClient | undefined;
 
+function burnHome(): string {
+  const home = process.env.BURN_HOME;
+  return home !== undefined && home !== '' ? home : path.join(os.homedir(), '.burn');
+}
+
 function burnPath(): string {
-  return vscode.workspace.getConfiguration('burn').get<string>('path') ?? 'burn';
+  const configured = vscode.workspace.getConfiguration('burn').get<string>('path');
+  if (configured && configured !== 'burn') {
+    return configured;
+  }
+  const exe = process.platform === 'win32' ? 'burn.exe' : 'burn';
+  const installed = path.join(burnHome(), 'bin', exe);
+  return fs.existsSync(installed) ? installed : 'burn';
+}
+
+function serverEnv(): NodeJS.ProcessEnv {
+  const bin = path.join(burnHome(), 'bin');
+  const current = process.env.PATH ?? '';
+  const parts = current.split(path.delimiter);
+  const env = { ...process.env };
+  env.PATH = parts.includes(bin) ? current : [bin, ...parts].join(path.delimiter);
+  return env;
 }
 
 function startClient(context: vscode.ExtensionContext): void {
   const command = burnPath();
+  const cwd = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+  const options = { env: serverEnv(), cwd };
   const serverOptions: ServerOptions = {
-    run: { command, args: ['lsp'] },
-    debug: { command, args: ['lsp'] },
+    run: { command, args: ['lsp'], options },
+    debug: { command, args: ['lsp'], options },
   };
   const clientOptions: LanguageClientOptions = {
     documentSelector: [
