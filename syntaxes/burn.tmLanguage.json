@@ -36,11 +36,26 @@
     "definitions": {
       "patterns": [
         {
-          "match": "\\b(def)\\s+(type|struct|record|interface|trait|class|enum|annotation)\\s+([A-Za-z_][A-Za-z0-9_]*)",
+          "match": "\\b(def)\\s+(?:(abstract|static)\\s+)?(type|struct|record|interface|trait|enum|annotation)\\s+([A-Za-z_][A-Za-z0-9_]*)",
           "captures": {
             "1": { "name": "keyword.declaration.burn" },
-            "2": { "name": "storage.type.burn" },
-            "3": { "name": "entity.name.type.burn" }
+            "2": { "name": "storage.modifier.burn" },
+            "3": { "name": "storage.type.burn" },
+            "4": { "name": "entity.name.type.burn" }
+          }
+        },
+        {
+          "match": "\\b(new)\\s+([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": { "name": "keyword.operator.new.burn" },
+            "2": { "name": "entity.name.type.burn" }
+          }
+        },
+        {
+          "match": "^\\s*(destroy)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+          "captures": {
+            "1": { "name": "keyword.other.destroy.burn" },
+            "2": { "name": "variable.other.burn" }
           }
         }
       ]
@@ -64,7 +79,7 @@
         },
         {
           "name": "keyword.declaration.burn",
-          "match": "\\b(fun|var|const|def|async|static|pub|priv)\\b"
+          "match": "\\b(fun|var|const|def|async|static|abstract|pub|priv)\\b"
         },
         { "name": "keyword.operator.word.burn", "match": "\\b(is|as)\\b" },
         { "name": "constant.language.burn", "match": "\\b(true|false|null)\\b" },
