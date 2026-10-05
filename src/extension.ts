@@ -47,12 +47,23 @@ function startClient(context: vscode.ExtensionContext): void {
     synchronize: { fileEvents: vscode.workspace.createFileSystemWatcher('**/*.bn') },
   };
   client = new LanguageClient('burn', 'Burn Language Server', serverOptions, clientOptions);
-  client.start().catch((err: unknown) => {
-    const reason = err instanceof Error ? err.message : String(err);
-    void vscode.window.showErrorMessage(
-      `Could not start the Burn language server (${command} lsp): ${reason}. Set "burn.path" to your burn executable.`
-    );
-  });
+  const started = client;
+  client.start().then(
+    () => {
+      const caps = started.initializeResult?.capabilities;
+      if (caps !== undefined && caps.documentLinkProvider === undefined) {
+        void vscode.window.showWarningMessage(
+          `The burn at ${command} is older than this extension, so completion while typing, clickable imports, auto-import and other features are missing. Update Burn with burnup or set "burn.path".`
+        );
+      }
+    },
+    (err: unknown) => {
+      const reason = err instanceof Error ? err.message : String(err);
+      void vscode.window.showErrorMessage(
+        `Could not start the Burn language server (${command} lsp): ${reason}. Set "burn.path" to your burn executable.`
+      );
+    }
+  );
   context.subscriptions.push({ dispose: () => void client?.stop() });
 }
 
