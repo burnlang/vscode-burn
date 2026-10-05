@@ -8,25 +8,20 @@ Language support for [Burn](https://github.com/burnlang/burn).
 
 ## Features
 
-- Syntax highlighting for `.bn` files, including definitions, generics, `match`, bit operators, sized number types and string templates
-- Live diagnostics from the real Burn compiler with exact line and column, and quick fixes for the compiler's suggestions
-- Completion for locals, globals, types, built-ins and members after `.`, with the documentation of built-in functions
-- Signature help while you type the arguments of a call
-- Inlay hints with the inferred type of `var` declarations and loop variables
+- Syntax highlighting for `.bn` files, including `def` definitions and string templates
+- Live diagnostics from the real Burn compiler with exact line and column
+- Completion that keeps working while you type, for locals, globals, types, built-ins and members after `.`, with
+  docs, parentheses and parameter hints
+- Completion and quick fixes that add missing imports from the standard library and your project
 - Hover with inferred types, signatures and documentation
-- Go to definition, also into the standard library, the built-in functions (shown with their documentation) and the
-  functions exported by `.bvmc` libraries
-- Find all references and rename across the files of a project, including struct fields, enum variants and interface
-  methods together with their implementations
-- Highlights of the other uses of the name under the cursor, the document outline and workspace symbol search (`Ctrl+T`)
-- Formatting with the built-in formatter
-- **Run**, **Run natively** and **Build** above `fun main()`, and a run button in the editor title
-- Commands: **Burn: Run Current File**, **Burn: Compile and Run Current File Natively**, **Burn: Build Executable**,
-  **Burn: Open Standard Library Module...**, **Burn: Show Built-in Functions**, **Burn: Restart Language Server**
-- The Burn version in the status bar; click it to restart the language server
-
-Standard library modules and the built-in declarations are written by `burn sources` to
-`~/.burn/cache/sources/<version>`. They open read-only.
+- Clickable imports that open the module, including standard library modules
+- Signature help for calls and inlay hints with inferred types
+- Go to definition (also into the standard library, built-in functions and bytecode libraries), type definition and
+  implementation
+- Find all references, highlight references and rename across files
+- Workspace symbols, an outline with struct members, folding, formatting, quick fixes and fix all
+- Run, Run natively and Build links above `fun main`
+- **Burn: Open Standard Library Module...** and **Burn: Show Built-in Functions** to read library sources
 
 ## Requirements
 
