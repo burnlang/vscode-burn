@@ -2,7 +2,7 @@
   "name": "burn-language-server",
   "displayName": "Burn Language Support",
   "description": "Burn language support: diagnostics, completion, signature help, inlay type hints, hover, go to definition (also into the standard library and built-ins), find references, rename, formatting and quick fixes",
-  "version": "26.2.0",
+  "version": "26.3.0",
   "publisher": "burn",
   "icon": "images/icon.png",
   "license": "GPL-3.0-only",
@@ -19,7 +19,8 @@
     "Snippets"
   ],
   "activationEvents": [
-    "onLanguage:burn"
+    "onLanguage:burn",
+    "workspaceContains:**/burn.toml"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -50,6 +51,11 @@
       }
     ],
     "commands": [
+      {
+        "command": "burn.reloadProject",
+        "title": "Burn: Reload Project (ash sync)",
+        "icon": "$(sync)"
+      },
       {
         "command": "burn.run",
         "title": "Burn: Run Current File",
@@ -99,6 +105,26 @@
           "type": "boolean",
           "default": true,
           "description": "Show Run, Run natively and Build above `fun main()`."
+        },
+        "burn.ashPath": {
+          "type": "string",
+          "default": "ash",
+          "description": "Path to the ash executable used to reload projects. By default ~/.burn/bin/ash (installed by burnup) is used when it exists, otherwise ash from PATH."
+        },
+        "burn.reload.onChange": {
+          "type": "string",
+          "enum": [
+            "ask",
+            "always",
+            "never"
+          ],
+          "enumDescriptions": [
+            "Ask whether to reload when burn.toml changes",
+            "Reload automatically when burn.toml changes",
+            "Never reload automatically; use Burn: Reload Project"
+          ],
+          "default": "ask",
+          "description": "What to do when burn.toml changes: reload the project with ash sync, like a Gradle sync."
         }
       }
     },
@@ -122,6 +148,20 @@
         {
           "command": "burn.build",
           "when": "editorLangId == burn"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "burn.reloadProject",
+          "when": "resourceFilename == burn.toml",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "burn.reloadProject",
+          "when": "resourceFilename == burn.toml",
+          "group": "navigation"
         }
       ]
     }

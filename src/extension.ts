@@ -3,6 +3,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient/node';
+import { ProjectReloader } from './reload';
 import { execFile } from 'child_process';
 
 let client: LanguageClient | undefined;
@@ -44,7 +45,9 @@ function startClient(context: vscode.ExtensionContext): void {
       { scheme: 'file', language: 'burn' },
       { scheme: 'untitled', language: 'burn' },
     ],
-    synchronize: { fileEvents: vscode.workspace.createFileSystemWatcher('**/*.bn') },
+    synchronize: {
+      fileEvents: vscode.workspace.createFileSystemWatcher('**/{*.bn,burn.toml,burn.lock}'),
+    },
   };
   client = new LanguageClient('burn', 'Burn Language Server', serverOptions, clientOptions);
   const started = client;
@@ -209,6 +212,17 @@ function createStatus(context: vscode.ExtensionContext): void {
 }
 
 export function activate(context: vscode.ExtensionContext): void {
+  const output = vscode.window.createOutputChannel('Burn');
+  const reloader = new ProjectReloader({
+    burnHome,
+    env: serverEnv,
+    output,
+    restart: async () => {
+      await client?.stop();
+      startClient(context);
+    },
+  });
+  reloader.watch(context);
   startClient(context);
   createStatus(context);
   markReadOnly(vscode.window.activeTextEditor);
@@ -228,6 +242,10 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
     vscode.languages.registerCodeLensProvider({ language: 'burn' }, new MainCodeLens()),
     vscode.window.onDidChangeActiveTextEditor(markReadOnly),
+    output,
+    vscode.commands.registerCommand('burn.reloadProject', (uri?: vscode.Uri) =>
+      reloader.reload(uri)
+    ),
     vscode.commands.registerCommand('burn.restartServer', async () => {
       await client?.stop();
       startClient(context);

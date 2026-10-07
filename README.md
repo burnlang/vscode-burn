@@ -21,6 +21,9 @@ Language support for [Burn](https://github.com/burnlang/burn).
 - Find all references, highlight references and rename across files
 - Workspace symbols, an outline with struct members, folding, formatting, quick fixes and fix all
 - Run, Run natively and Build links above `fun main`
+- **Burn: Reload Project (ash sync)**, like a Gradle sync: installs the packages in `burn.toml`, refreshes the
+  package index and reloads the language server. When `burn.toml` changes, the extension offers to reload
+  (`burn.reload.onChange`: `ask`, `always` or `never`), and a reload button sits in the title bar of `burn.toml`
 - **Burn: Open Standard Library Module...** and **Burn: Show Built-in Functions** to read library sources
 
 ## Requirements
