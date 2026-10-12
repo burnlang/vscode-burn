@@ -91,5 +91,20 @@
     "prefix": "fung",
     "body": ["fun ${1:name}<${2:T}>(${3:items}: [${2:T}]): ${2:T}? {", "\t$0", "}"],
     "description": "Function with a type parameter"
+  },
+  "Unsafe block": {
+    "prefix": "unsafe",
+    "body": ["unsafe {", "\t$0", "}"],
+    "description": "Code that the compiler cannot check, such as inline assembly"
+  },
+  "Unsafe function": {
+    "prefix": "unsafe fun",
+    "body": ["unsafe fun ${1:name}(${2:value}: ${3:int}): ${4:int} {", "\t$0", "}"],
+    "description": "A function that can only be called in unsafe code"
+  },
+  "Inline assembly": {
+    "prefix": "asm",
+    "body": ["asm {", "\tx86_64 {", "\t\t$1", "\t}", "\tarm64 {", "\t\t$2", "\t}", "\telse {", "\t\t$0", "\t}", "}"],
+    "description": "Inline assembly for each target, with Burn code for the others"
   }
 }
