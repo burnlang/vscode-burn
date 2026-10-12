@@ -8,7 +8,9 @@ Language support for [Burn](https://github.com/burnlang/burn).
 
 ## Features
 
-- Syntax highlighting for `.bn` files, including `def` definitions and string templates
+- Syntax highlighting for `.bn` files, including `def` definitions, string templates, `unsafe` code and `asm`
+  blocks (instructions, labels and `{name}` operands in assembly, JavaScript inside `js` sections)
+- Snippets, including `unsafe`, `unsafe fun` and an `asm` block with a section per target
 - Live diagnostics from the real Burn compiler with exact line and column
 - Completion that keeps working while you type, for locals, globals, types, built-ins and members after `.`, with
   docs, parentheses and parameter hints
