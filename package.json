@@ -2,7 +2,7 @@
   "name": "burn-language-server",
   "displayName": "Burn Language Support",
   "description": "Burn language support: diagnostics, completion, signature help, inlay type hints, hover, go to definition (also into the standard library and built-ins), find references, rename, formatting and quick fixes",
-  "version": "26.4.0",
+  "version": "26.5.0",
   "publisher": "burn",
   "icon": "images/icon.png",
   "license": "GPL-3.0-only",
